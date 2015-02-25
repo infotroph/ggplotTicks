@@ -26,6 +26,33 @@ mirror.ticks = function(ggobj){
 		}
 	}
 
+	match.axes = function(panel){
+		# Find *left* axes in same row by matching *bottom* extent, 
+		# find *bottom* axes in same column by matching *left* extent.
+		lax =  which(axis_extents$b == panel$b & !nulls)
+		bax = which(axis_extents$l == panel$l & !nulls)
+		
+
+		# FIXME: How to efficiently handle all these cases?
+		# 1 panel bl->bltr
+		# multipanel shared axes -> mirror to other end of row/col
+		# multipanel axes differ -> mirror to... same panel?
+
+		# may be able to assume null axes -> treat as same across row/col
+
+		if(length(lax) > 1 || length(bax) > 1){
+			# Multiple axes in this row/col, e.g. facet_wrap(..., scales="free")
+			# *should* be safe to handle lax>1 and bax>1 identically, right?
+			lax = which(axis_extents$b == panel$b & axes$layout$l == panel$l-1)
+			bax = which(axis_extents$l == panel$l & axes$layout$b == panel$b+1)
+		}
+		if(length(lax) == 1 && length(bax) == 1){
+			return(c(lax[[1]], bax[[1]]))
+		}else{
+			stop("Can't match axes to panel!")
+		}	
+	}
+
 	panel.extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
 
 	rtax = gtable_filter(ggobj, "axis-l")$grobs[[1]]
