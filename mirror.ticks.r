@@ -57,7 +57,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 	ggobj = ggplotGrob(ggobj)
 
-	panel.extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
+	panel_extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
 	is_toprow = (panel_extents$b == min(panel_extents$b))
 	is_rtcol = (panel_extents$l == max(panel_extents$l))
 
