@@ -66,28 +66,46 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 	axis_extents = axes$layout
 
 	for(i in 1:nrow(panel_extents)){
+		
+		if(allPanels==FALSE && !is_toprow[i] && !is_rtcol[i]){
+			# no mirroring to do in this panel, bail now
+			next
+		}
+
 		cur_panel = panel_extents[i,]
 		cur_axes = match.axes(cur_panel)
-		rtax = axes$grobs[[cur_axes[1]]]
-		topax = axes$grobs[[cur_axes[2]]]
+		
+		if(allPanels==TRUE || is_rtcol[i]){
+			rtax = axes$grobs[[cur_axes[1]]]
 
-		rttxt = axgrep(rtax$children$axis, "text")
-		toptxt = axgrep(topax$children$axis, "text")
-		rttick = axgrep(rtax$children$axis, "ticks")
-		toptick = axgrep(topax$children$axis, "ticks")
+			rttxt = axgrep(rtax$children$axis, "text")
+			rtax$children$axis$grobs[[rttxt]]$label = NULL
 
-		rtax$children$axis$grobs[[rttxt]]$label = NULL
-		topax$children$axis$grobs[[toptxt]]$label = NULL
+			rttick = axgrep(rtax$children$axis, "ticks")
+			rtax_x = rtax$children$axis$grobs[[rttick]]$x
+			rtax_x = sapply(rtax_x, swaptick, simplify=FALSE)
+			class(rtax_x) = c("unit.list", "unit")
+			rtax$children$axis$grobs[[rttick]]$x = rtax_x
+		}else{
+			rtax=grob(name=NULL)
+			class(rtax) = c("zeroGrob", class(rtax))
+		}
 
-		rtax_x = rtax$children$axis$grobs[[rttick]]$x
-		rtax_x = sapply(rtax_x, swaptick, simplify=FALSE)
-		class(rtax_x) = c("unit.list", "unit")
-		rtax$children$axis$grobs[[rttick]]$x = rtax_x
+		if(allPanels==TRUE || is_toprow[i]){
+			topax = axes$grobs[[cur_axes[2]]]
 
-		topax_y = topax$children$axis$grobs[[toptick]]$y
-		topax_y = sapply(topax_y, swaptick, simplify=FALSE)
-		class(topax_y) = c("unit.list", "unit")
-		topax$children$axis$grobs[[toptick]]$y = topax_y
+			toptxt = axgrep(topax$children$axis, "text")
+			topax$children$axis$grobs[[toptxt]]$label = NULL
+			
+			toptick = axgrep(topax$children$axis, "ticks")
+			topax_y = topax$children$axis$grobs[[toptick]]$y
+			topax_y = sapply(topax_y, swaptick, simplify=FALSE)
+			class(topax_y) = c("unit.list", "unit")
+			topax$children$axis$grobs[[toptick]]$y = topax_y
+		}else{
+			topax=grob(name=NULL)
+			class(topax) = c("zeroGrob", class(topax))
+		}
 
 		ggobj = gtable_add_grob(
 			x=ggobj,
