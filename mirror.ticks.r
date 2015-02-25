@@ -10,8 +10,6 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 	require(gtable)
 	
-	ggobj = ggplotGrob(ggobj)
-
 	axgrep = function(gtab, pattern){
 			which(sapply(gtab$grobs, function(x)grepl(pattern, x$name)))}
 
@@ -56,6 +54,8 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 			stop("Can't match axes to panel!")
 		}	
 	}
+
+	ggobj = ggplotGrob(ggobj)
 
 	panel.extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
 	is_toprow = (panel_extents$b == min(panel_extents$b))
