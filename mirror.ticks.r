@@ -54,6 +54,8 @@ mirror.ticks = function(ggobj){
 	}
 
 	panel.extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
+	is_toprow = (panel_extents$b == min(panel_extents$b))
+	is_rtcol = (panel_extents$l == max(panel_extents$l))
 
 	rtax = gtable_filter(ggobj, "axis-l")$grobs[[1]]
 	topax = gtable_filter(ggobj, "axis-b")$grobs[[1]]
