@@ -75,15 +75,15 @@ mirror.ticks = function(ggobj){
 		rtax$children$axis$grobs[[rttxt]]$label = NULL
 		topax$children$axis$grobs[[toptxt]]$label = NULL
 
-		rtax.x = rtax$children$axis$grobs[[rttick]]$x
-		rtax.x = sapply(rtax.x, swaptick, simplify=FALSE)
-		class(rtax.x) = c("unit.list", "unit")
-		rtax$children$axis$grobs[[rttick]]$x = rtax.x
+		rtax_x = rtax$children$axis$grobs[[rttick]]$x
+		rtax_x = sapply(rtax_x, swaptick, simplify=FALSE)
+		class(rtax_x) = c("unit.list", "unit")
+		rtax$children$axis$grobs[[rttick]]$x = rtax_x
 
-		topax.y = topax$children$axis$grobs[[toptick]]$y
-		topax.y = sapply(topax.y, swaptick, simplify=FALSE)
-		class(topax.y) = c("unit.list", "unit")
-		topax$children$axis$grobs[[toptick]]$y = topax.y
+		topax_y = topax$children$axis$grobs[[toptick]]$y
+		topax_y = sapply(topax_y, swaptick, simplify=FALSE)
+		class(topax_y) = c("unit.list", "unit")
+		topax$children$axis$grobs[[toptick]]$y = topax_y
 
 		ggobj = gtable_add_grob(
 			x=ggobj,
