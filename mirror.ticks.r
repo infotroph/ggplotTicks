@@ -8,27 +8,14 @@ mirror.ticks = function(ggobj){
 	
 	ggobj = ggplotGrob(ggobj)
 
-	panel.extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
-
-	rtax = gtable_filter(ggobj, "axis-l")$grobs[[1]]
-	topax = gtable_filter(ggobj, "axis-b")$grobs[[1]]
-
 	axgrep = function(gtab, pattern){
 			which(sapply(gtab$grobs, function(x)grepl(pattern, x$name)))}
 
-	rttxt = axgrep(rtax$children$axis, "text")
-	toptxt = axgrep(topax$children$axis, "text")
-	rttick = axgrep(rtax$children$axis, "ticks")
-	toptick = axgrep(topax$children$axis, "ticks")
-
-	rtax$children$axis$grobs[[rttxt]]$label = NULL
-	topax$children$axis$grobs[[toptxt]]$label = NULL
-
+	swaptick = function(tick){
 	# Tick coordinates are encoded as 1npc for the end on the axis line 
 	# 	and 1npc-axis.tick.length for the other end. 
 	# We'll move ticks to the other side of the line by flipping the sign
 	# 	of the subtraction.
-	swaptick = function(tick){
 		if(inherits(tick, "unit.arithmetic")){
 			tick[[3]] = unit(
 				-c(tick[[3]]), # drop unit class and invert bare numeric values
@@ -38,6 +25,20 @@ mirror.ticks = function(ggobj){
 			return(tick)
 		}
 	}
+
+	panel.extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
+
+	rtax = gtable_filter(ggobj, "axis-l")$grobs[[1]]
+	topax = gtable_filter(ggobj, "axis-b")$grobs[[1]]
+
+	rttxt = axgrep(rtax$children$axis, "text")
+	toptxt = axgrep(topax$children$axis, "text")
+	rttick = axgrep(rtax$children$axis, "ticks")
+	toptick = axgrep(topax$children$axis, "ticks")
+
+	rtax$children$axis$grobs[[rttxt]]$label = NULL
+	topax$children$axis$grobs[[toptxt]]$label = NULL
+
 
 	rtax.x = rtax$children$axis$grobs[[rttick]]$x 
 	rtax.x = sapply(rtax.x, swaptick, simplify=FALSE)
