@@ -67,34 +67,33 @@ mirror.ticks = function(ggobj){
 		rtax = axes$grobs[[cur_axes[1]]]
 		topax = axes$grobs[[cur_axes[2]]]
 
-	rttxt = axgrep(rtax$children$axis, "text")
-	toptxt = axgrep(topax$children$axis, "text")
-	rttick = axgrep(rtax$children$axis, "ticks")
-	toptick = axgrep(topax$children$axis, "ticks")
+		rttxt = axgrep(rtax$children$axis, "text")
+		toptxt = axgrep(topax$children$axis, "text")
+		rttick = axgrep(rtax$children$axis, "ticks")
+		toptick = axgrep(topax$children$axis, "ticks")
 
-	rtax$children$axis$grobs[[rttxt]]$label = NULL
-	topax$children$axis$grobs[[toptxt]]$label = NULL
+		rtax$children$axis$grobs[[rttxt]]$label = NULL
+		topax$children$axis$grobs[[toptxt]]$label = NULL
 
+		rtax.x = rtax$children$axis$grobs[[rttick]]$x
+		rtax.x = sapply(rtax.x, swaptick, simplify=FALSE)
+		class(rtax.x) = c("unit.list", "unit")
+		rtax$children$axis$grobs[[rttick]]$x = rtax.x
 
-	rtax.x = rtax$children$axis$grobs[[rttick]]$x 
-	rtax.x = sapply(rtax.x, swaptick, simplify=FALSE)
-	class(rtax.x) = c("unit.list", "unit")
-	rtax$children$axis$grobs[[rttick]]$x = rtax.x
-	
-	topax.y = topax$children$axis$grobs[[toptick]]$y 
-	topax.y = sapply(topax.y, swaptick, simplify=FALSE)
-	class(topax.y) = c("unit.list", "unit")
-	topax$children$axis$grobs[[toptick]]$y = topax.y
+		topax.y = topax$children$axis$grobs[[toptick]]$y
+		topax.y = sapply(topax.y, swaptick, simplify=FALSE)
+		class(topax.y) = c("unit.list", "unit")
+		topax$children$axis$grobs[[toptick]]$y = topax.y
 
-	ggobj = gtable_add_grob(
-		x=ggobj, 
-		grobs=list(rtax, topax), 
-		t=panel.extents$t,
-		l=panel.extents$l,
-		r=panel.extents$r,
-		b=panel.extents$b, 
-		z=panel.extents$z, 
-		name=c("axis-r", "axis-t"))
+		ggobj = gtable_add_grob(
+			x=ggobj,
+			grobs=list(rtax, topax),
+			t=panel.extents$t,
+			l=panel.extents$l,
+			r=panel.extents$r,
+			b=panel.extents$b,
+			z=panel.extents$z,
+			name=c("axis-r", "axis-t"))
 	}
 	return(ggobj)
 }
