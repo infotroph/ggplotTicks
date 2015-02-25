@@ -1,8 +1,12 @@
-mirror.ticks = function(ggobj){
-	# Given a one-panel ggplot object with axes on the bottom and left,  
+mirror.ticks = function(ggobj, allPanels=FALSE){
+	# Given a ggplot object with axes on the bottom and left, 
 	# add matching axes on the top and right.
-	# TODO: Make work with multi-panel plots by passing in panel number
-	# 	(panel-1, panel-2, etc). Note "axis_l-1" vs 1-panel "axis-l").
+	# For a multipanel figure: 
+	# if allPanels=F, mirrors ticks to the other end of the row/column. 
+	# allPanels=T *not yet implemented*, 
+	# when done it will mirror ticks from B->T and L->R within EACH panel...
+	# But think about whether that's really what you want! 
+	# The last thing most multipanel plots need is more tick marks.
 
 	require(gtable)
 	
