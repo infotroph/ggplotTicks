@@ -57,8 +57,15 @@ mirror.ticks = function(ggobj){
 	is_toprow = (panel_extents$b == min(panel_extents$b))
 	is_rtcol = (panel_extents$l == max(panel_extents$l))
 
-	rtax = gtable_filter(ggobj, "axis-l")$grobs[[1]]
-	topax = gtable_filter(ggobj, "axis-b")$grobs[[1]]
+	axes = gtable_filter(ggobj, "axis", trim=FALSE)
+	nulls = sapply(axes$grobs, function(x)any(class(x) == "zeroGrob"))
+	axis_extents = axes$layout
+
+	for(i in 1:nrow(panel_extents)){
+		cur_panel = panel_extents[i,]
+		cur_axes = match.axes(cur_panel)
+		rtax = axes$grobs[[cur_axes[1]]]
+		topax = axes$grobs[[cur_axes[2]]]
 
 	rttxt = axgrep(rtax$children$axis, "text")
 	toptxt = axgrep(topax$children$axis, "text")
@@ -88,5 +95,6 @@ mirror.ticks = function(ggobj){
 		b=panel.extents$b, 
 		z=panel.extents$z, 
 		name=c("axis-r", "axis-t"))
+	}
 	return(ggobj)
 }
