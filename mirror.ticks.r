@@ -88,11 +88,11 @@ mirror.ticks = function(ggobj){
 		ggobj = gtable_add_grob(
 			x=ggobj,
 			grobs=list(rtax, topax),
-			t=panel.extents$t,
-			l=panel.extents$l,
-			r=panel.extents$r,
-			b=panel.extents$b,
-			z=panel.extents$z,
+			t=cur_panel$t,
+			l=cur_panel$l,
+			r=cur_panel$r,
+			b=cur_panel$b,
+			z=cur_panel$z,
 			name=c("axis-r", "axis-t"))
 	}
 	return(ggobj)
