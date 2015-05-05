@@ -50,7 +50,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 		}else if(length(lax) == 1 && length(bax) == 1){
 			return(c(lax[[1]], bax[[1]]))
 		}else{
-			stop("Can't match axes to panel!")
+			stop(paste("Can't match axes to", panel$name))
 		}	
 	}
 
