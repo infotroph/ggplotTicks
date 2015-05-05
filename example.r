@@ -57,3 +57,10 @@ grid.arrange(
 	tp_wrap_free, 
 	mirror.ticks(tp_wrap_free),
 	mirror.ticks(tp_wrap_free, allPanels=TRUE))
+
+tp_wrap_ragged = (testplot.fancy 
+	+facet_wrap(~carb, ncol=4, as.table=FALSE))
+grid.arrange(
+	tp_wrap_ragged, 
+	mirror.ticks(tp_wrap_ragged),
+	mirror.ticks(tp_wrap_ragged, allPanels=TRUE))
