@@ -57,8 +57,20 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 	ggobj = ggplotGrob(ggobj)
 
 	panel_extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
-	is_toprow = (panel_extents$b == min(panel_extents$b))
-	is_rtcol = (panel_extents$l == max(panel_extents$l))
+
+	# Find outside edges of each row & column,
+	# allowing for incomplete rows (e.g. 5 panels in 2 rows)
+	is_coltop = mapply(
+		FUN=function(bot,left){
+			bot == min(panel_extents$b[panel_extents$l==left])},
+		bot=panel_extents$b,
+		left=panel_extents$l)
+	is_rowend = mapply(
+		FUN=function(bot,left){
+			left == max(panel_extents$l[panel_extents$b==bot])},
+		bot=panel_extents$b,
+		left=panel_extents$l)
+
 
 	axes = gtable_filter(ggobj, "axis", trim=FALSE)
 	nulls = sapply(axes$grobs, function(x)any(class(x) == "zeroGrob"))
@@ -66,7 +78,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 	for(i in 1:nrow(panel_extents)){
 		
-		if(allPanels==FALSE && !is_toprow[i] && !is_rtcol[i]){
+		if(allPanels==FALSE && !is_coltop[i] && !is_rowend[i]){
 			# no mirroring to do in this panel, bail now
 			next
 		}
@@ -74,7 +86,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 		cur_panel = panel_extents[i,]
 		cur_axes = match.axes(cur_panel)
 		
-		if(allPanels==TRUE || is_rtcol[i]){
+		if(allPanels==TRUE || is_rowend[i]){
 			rtax = axes$grobs[[cur_axes[1]]]
 
 			rttxt = axgrep(rtax$children$axis, "text")
@@ -90,7 +102,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 			class(rtax) = c("zeroGrob", class(rtax))
 		}
 
-		if(allPanels==TRUE || is_toprow[i]){
+		if(allPanels==TRUE || is_coltop[i]){
 			topax = axes$grobs[[cur_axes[2]]]
 
 			toptxt = axgrep(topax$children$axis, "text")
