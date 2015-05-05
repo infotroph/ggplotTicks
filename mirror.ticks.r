@@ -55,7 +55,9 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 		}	
 	}
 
-	ggobj = ggplotGrob(ggobj)
+	if(!is.gtable(ggobj)){
+		ggobj = ggplotGrob(ggobj)
+	}
 
 	panel_extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
 
