@@ -72,6 +72,21 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 		bot=panel_extents$b,
 		left=panel_extents$l)
 
+	# If the bottom panel of a column has no x-axis to mirror, add one.
+	# Assumptions:
+	#	* Panel numbers go from 1 to nrow(panel_extents).
+	#	* Last panel will always have an x-axis to copy from, because it's always on the bottom row.
+	#	* All panels hace the same x-axis scale, because ggplot doesn't generate missing axes when scales differ.
+	is_colbottom = mapply(
+		FUN=function(bot,left){
+			bot==max(panel_extents$b[panel_extents$l==left])},
+		bot=panel_extents$b,
+		left=panel_extents$l)
+	colbottom_names = paste0("axis_b", which(is_colbottom))
+	missing_x = sapply(
+		X=ggobj$grobs[colbottom_names],
+		FUN=function(x)any(class(x) == "zeroGrob"))
+	ggobj$grobs[colbottom_names[missing_x]] = list(ggobj$grobs[[paste0("axis_b", nrow(panel_extents))]])
 
 	axes = gtable_filter(ggobj, "axis", trim=FALSE)
 	nulls = sapply(axes$grobs, function(x)any(class(x) == "zeroGrob"))
