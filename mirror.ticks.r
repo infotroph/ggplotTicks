@@ -8,7 +8,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 	# But think about whether that's really what you want! 
 	# The last thing most multipanel plots need is more tick marks.
 
-	require(gtable)
+	library(gtable)
 	
 	axgrep = function(gtab, pattern){
 			which(sapply(gtab$grobs, function(x)grepl(pattern, x$name)))}
