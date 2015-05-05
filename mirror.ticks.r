@@ -47,7 +47,8 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 			# *should* be safe to handle lax>1 and bax>1 identically, right?
 			lax = which(axis_extents$b == panel$b & axes$layout$l == panel$l-1)
 			bax = which(axis_extents$l == panel$l & axes$layout$b == panel$b+1)
-		}else if(length(lax) == 1 && length(bax) == 1){
+		}
+		if(length(lax) == 1 && length(bax) == 1){
 			return(c(lax[[1]], bax[[1]]))
 		}else{
 			stop(paste("Can't match axes to", panel$name))
