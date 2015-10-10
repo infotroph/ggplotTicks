@@ -1,4 +1,4 @@
-ggplot-ticks
+ggplotTicks
 ============
 
 Put scale ticks on all four sides on a ggplot by copying axes from bottom to top and left to right.
