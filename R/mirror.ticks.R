@@ -11,21 +11,6 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 	axgrep = function(gtab, pattern){
 			which(sapply(gtab$grobs, function(x)grepl(pattern, x$name)))}
 
-	swaptick = function(tick){
-	# Tick coordinates are encoded as 1npc for the end on the axis line 
-	# 	and 1npc-axis.tick.length for the other end. 
-	# We'll move ticks to the other side of the line by flipping the sign
-	# 	of the subtraction.
-		if(inherits(tick, "unit.arithmetic")){
-			tick[[3]] = unit(
-				-c(tick[[3]]), # drop unit class and invert bare numeric values
-				attr(tick[[3]], "unit")) # add original unit class back on
-			return(tick)
-		} else {
-			return(tick)
-		}
-	}
-
 	match.axes = function(panel){
 		# Find *left* axes in same row by matching *bottom* extent, 
 		# find *bottom* axes in same column by matching *left* extent.
