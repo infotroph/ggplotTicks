@@ -1,4 +1,4 @@
-Package: ggplot-ticks
+Package: ggplotTicks
 Type: Package
 Title: Put axis ticks on all sides of a ggplot
 Version: 0.0.1
