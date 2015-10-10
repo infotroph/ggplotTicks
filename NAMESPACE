@@ -1,2 +1,2 @@
 exportPattern("^[[:alpha:]]+")
-import(ggplot2, grid)
+import(ggplot2, grid, gtable)

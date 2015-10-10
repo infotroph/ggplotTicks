@@ -4,8 +4,6 @@ mirror.ticks = function(ggobj){
 	# TODO: Make work with multi-panel plots by passing in panel number
 	# 	(panel-1, panel-2, etc). Note "axis_l-1" vs 1-panel "axis-l").
 
-	require(gtable)
-	
 	ggobj = ggplotGrob(ggobj)
 
 	panel.extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
