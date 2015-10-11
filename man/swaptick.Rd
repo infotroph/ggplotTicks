@@ -24,7 +24,7 @@
 	Chris Black <chris@ckblack.org>
 }
 \seealso{
-	\code{\link[ggplot]{theme}} for more on \code{axis.ticks}, \code{\link{mirror.ticks}} for a practical application of tick-flipping.
+	\code{\link[ggplot2]{theme}} for more on \code{axis.ticks}, \code{\link{mirror.ticks}} for a practical application of tick-flipping.
 }
 \examples{
 tick_start = unit(1, "npc")
