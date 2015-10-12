@@ -1,42 +1,36 @@
-mirror.ticks = function(ggobj, allPanels=FALSE){
-	# Given a ggplot object with axes on the bottom and left, 
-	# add matching axes on the top and right.
-	# For a multipanel figure: 
-	# if allPanels=F, mirrors ticks to the other end of the row/column. 
-	# allPanels=T *not yet implemented*, 
-	# when done it will mirror ticks from B->T and L->R within EACH panel...
-	# But think about whether that's really what you want! 
-	# The last thing most multipanel plots need is more tick marks.
+axgrep = function(gtab, pattern){
+	# Helper, not exported: Find grobs with pattern in their grobnames.
+	# These are not necessarily the same grobs returned by
+	# gtable_filter(gtab, pattern)!
+	which(sapply(gtab$grobs, function(x)grepl(pattern, x$name)))
+}
 
-	axgrep = function(gtab, pattern){
-			which(sapply(gtab$grobs, function(x)grepl(pattern, x$name)))}
+match.axes = function(panel, extents){
+	# Helper, not exported: Find the existing bottom and left axes
+	# that apply to this panel, even if they're in a different panel.
 
-	match.axes = function(panel){
-		# Find *left* axes in same row by matching *bottom* extent, 
-		# find *bottom* axes in same column by matching *left* extent.
-		lax =  which(axis_extents$b == panel$b & !nulls)
-		bax = which(axis_extents$l == panel$l & !nulls)
-		
+	# *left* axes in same row have same *bottom* extent,
+	# *bottom* axes in same column have same *left* extent.
+	lax =  which(extents$b == panel$b & !extents$isnull)
+	bax = which(extents$l == panel$l & !extents$isnull)
 
-		# FIXME: How to efficiently handle all these cases?
-		# 1 panel bl->bltr
-		# multipanel shared axes -> mirror to other end of row/col
-		# multipanel axes differ -> mirror to... same panel?
-
-		# may be able to assume null axes -> treat as same across row/col
-
-		if(length(lax) > 1 || length(bax) > 1){
-			# Multiple axes in this row/col, e.g. facet_wrap(..., scales="free")
-			# *should* be safe to handle lax>1 and bax>1 identically, right?
-			lax = which(axis_extents$b == panel$b & axes$layout$l == panel$l-1)
-			bax = which(axis_extents$l == panel$l & axes$layout$b == panel$b+1)
-		}
-		if(length(lax) == 1 && length(bax) == 1){
-			return(c(lax[[1]], bax[[1]]))
-		}else{
-			stop(paste("Can't match axes to", panel$name))
-		}	
+	if(length(lax) > 1){
+		# Multiple axes in this row, e.g. facet_wrap(..., scales="free_x") => use only this panel's axes.
+		lax = which(extents$b == panel$b & extents$l == panel$l-1)
 	}
+	if(length(bax) > 1){
+		# Multiple axes in this col, e.g. facet_wrap(..., scales="free_y")
+		bax = which(extents$l == panel$l & extents$b == panel$b+1)
+	}
+
+	if(length(lax) == 1 && length(bax) == 1){
+		return(c(lax[[1]], bax[[1]]))
+	}else{
+		stop(paste("Can't match axes to", panel$name))
+	}
+}
+
+mirror.ticks = function(ggobj, allPanels=FALSE){
 
 	if(!is.gtable(ggobj)){
 		ggobj = ggplotGrob(ggobj)
@@ -44,11 +38,21 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 	panel_extents = gtable_filter(ggobj, "panel", trim=FALSE)$layout
 
-	# Find outside edges of each row & column,
+	# Logical vectors: Find outside edges of each row & column,
 	# allowing for incomplete rows (e.g. 5 panels in 2 rows)
 	is_coltop = mapply(
 		FUN=function(bot,left){
 			bot == min(panel_extents$b[panel_extents$l==left])},
+		bot=panel_extents$b,
+		left=panel_extents$l)
+	is_colbottom = mapply(
+		FUN=function(bot,left){
+			bot==max(panel_extents$b[panel_extents$l==left])},
+		bot=panel_extents$b,
+		left=panel_extents$l)
+	is_rowstart = mapply(
+		FUN=function(bot,left){
+			left == min(panel_extents$l[panel_extents$b==bot])},
 		bot=panel_extents$b,
 		left=panel_extents$l)
 	is_rowend = mapply(
@@ -61,12 +65,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 	# Assumptions:
 	#	* Panel numbers go from 1 to nrow(panel_extents).
 	#	* Last panel will always have an x-axis to copy from, because it's always on the bottom row.
-	#	* All panels hace the same x-axis scale, because ggplot doesn't generate missing axes when scales differ.
-	is_colbottom = mapply(
-		FUN=function(bot,left){
-			bot==max(panel_extents$b[panel_extents$l==left])},
-		bot=panel_extents$b,
-		left=panel_extents$l)
+	#	* All panels have the same x-axis scale, because ggplot doesn't generate missing axes when scales differ.
 	colbottom_names = paste0("axis_b", which(is_colbottom))
 	missing_x = sapply(
 		X=ggobj$grobs[colbottom_names],
@@ -74,19 +73,19 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 	ggobj$grobs[colbottom_names[missing_x]] = list(ggobj$grobs[[paste0("axis_b", nrow(panel_extents))]])
 
 	axes = gtable_filter(ggobj, "axis", trim=FALSE)
-	nulls = sapply(axes$grobs, function(x)any(class(x) == "zeroGrob"))
 	axis_extents = axes$layout
+	axis_extents$isnull = sapply(axes$grobs, function(x)any(class(x) == "zeroGrob"))
 
 	for(i in 1:nrow(panel_extents)){
-		
+
 		if(allPanels==FALSE && !is_coltop[i] && !is_rowend[i]){
 			# no mirroring to do in this panel, bail now
 			next
 		}
 
 		cur_panel = panel_extents[i,]
-		cur_axes = match.axes(cur_panel)
-		
+		cur_axes = match.axes(cur_panel, axis_extents)
+
 		if(allPanels==TRUE || is_rowend[i]){
 			rtax = axes$grobs[[cur_axes[1]]]
 
@@ -108,7 +107,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 			toptxt = axgrep(topax$children$axis, "text")
 			topax$children$axis$grobs[[toptxt]]$label = NULL
-			
+
 			toptick = axgrep(topax$children$axis, "ticks")
 			topax_y = topax$children$axis$grobs[[toptick]]$y
 			topax_y = sapply(topax_y, swaptick, simplify=FALSE)
@@ -128,6 +127,36 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 			b=cur_panel$b,
 			z=cur_panel$z,
 			name=c("axis-r", "axis-t"))
+
+		if(allPanels==TRUE){
+			if(!is_rowstart[i]){
+				lax = axes$grobs[[cur_axes[1]]]
+				ltxt = axgrep(lax$children$axis, "text")
+				lax$children$axis$grobs[[ltxt]]$label = NULL
+			}else{
+				lax=grob(name=NULL)
+				class(lax) = c("zeroGrob", class(lax))
+			}
+
+			if(!is_colbottom[i]){
+				botax = axes$grobs[[cur_axes[2]]]
+				bottxt = axgrep(botax$children$axis, "text")
+				botax$children$axis$grobs[[toptxt]]$label = NULL
+			}else{
+				botax=grob(name=NULL)
+				class(botax) = c("zeroGrob", class(botax))
+			}
+
+			ggobj = gtable_add_grob(
+				x=ggobj,
+				grobs=list(lax, botax),
+				t=cur_panel$t + c(0, 1),
+				l=cur_panel$l - c(1, 0),
+				r=cur_panel$r - c(1, 0),
+				b=cur_panel$b + c(0, 1),
+				z=cur_panel$z,
+				name=c("axis-ll", "axis-bb"))
+		}
 	}
 	return(ggobj)
 }
