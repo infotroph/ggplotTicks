@@ -10,3 +10,5 @@ License: MIT + file LICENSE
 Depends:
 	ggplot2,
 	gtable
+Suggests:
+	gridExtra

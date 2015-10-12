@@ -1,12 +1,5 @@
-require(ggplot2)
-require(grid)
-require(gtable)
-require(gridExtra) # just for multiplot demos.
-
-# Run examples from source files, not the installed package version
-sapply(
-	X=list.files(path="./R", pattern="*.R", full.names=TRUE),
-	FUN=source)
+library(gridExtra) # just for multiplot demos.
+library(ggplotTicks)
 
 testplot=(ggplot(mtcars, aes(wt, hp))
 	+geom_point())
