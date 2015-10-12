@@ -72,3 +72,21 @@ grid.arrange(
 	tp_wrap_ragged,
 	mirror.ticks(tp_wrap_ragged),
 	mirror.ticks(tp_wrap_ragged, allPanels=TRUE))
+
+print("tp_wrap_freex")
+tp_wrap_freex = (testplot.fancy
+	+facet_wrap(~carb, scales="free_x")
+	+ggtitle("facet_wrap, free x-scale"))
+grid.arrange(
+	tp_wrap_freex,
+	mirror.ticks(tp_wrap_freex),
+	mirror.ticks(tp_wrap_freex, allPanels=TRUE))
+
+print("tp_wrap_freey")
+tp_wrap_freey = (testplot.fancy
+	+facet_wrap(~carb, scales="free_y")
+	+ggtitle("facet_wrap, free y-scale"))
+grid.arrange(
+	tp_wrap_freey,
+	mirror.ticks(tp_wrap_freey),
+	mirror.ticks(tp_wrap_freey, allPanels=TRUE))
