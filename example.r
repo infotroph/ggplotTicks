@@ -3,7 +3,10 @@ require(grid)
 require(gtable)
 require(gridExtra) # just for multiplot demos.
 
-source("mirror.ticks.r")
+# Run examples from source files, not the installed package version
+sapply(
+	X=list.files(path="./R", pattern="*.R", full.names=TRUE),
+	FUN=source)
 
 testplot=(ggplot(mtcars, aes(wt, hp))
 	+geom_point())
@@ -26,6 +29,7 @@ grid.arrange(testplot.fancy, mirror.ticks(testplot.fancy))
 
 
 # Multipanel plots:
+print("tp_grid")
 tp_grid = (testplot.fancy
 	+facet_grid(am~carb)
 	+ggtitle("facet_grid, fixed scales"))
@@ -34,6 +38,7 @@ grid.arrange(
 	mirror.ticks(tp_grid), 
 	mirror.ticks(tp_grid, allPanels=TRUE))
 
+print("tp_grid_free")
 tp_grid_free = (testplot.fancy
 	+facet_grid(am~carb, scales="free")
 	+ggtitle("facet_grid, free scales"))
@@ -42,6 +47,7 @@ grid.arrange(
 	mirror.ticks(tp_grid_free), 
 	mirror.ticks(tp_grid_free, allPanels=TRUE))
 
+print("tp_wrap")
 tp_wrap = (testplot.fancy
 	+facet_wrap(~carb)
 	+ggtitle("facet_wrap, fixed scales"))
@@ -50,6 +56,7 @@ grid.arrange(
 	mirror.ticks(tp_wrap),
 	mirror.ticks(tp_wrap, allPanels=TRUE))
 
+print("tp_wrap_free")
 tp_wrap_free = (testplot.fancy
 	+facet_wrap(~carb, scales="free")
 	+ggtitle("facet_wrap, free scales"))
@@ -58,6 +65,7 @@ grid.arrange(
 	mirror.ticks(tp_wrap_free),
 	mirror.ticks(tp_wrap_free, allPanels=TRUE))
 
+print("tp_wrap_ragged")
 tp_wrap_ragged = (testplot.fancy 
 	+facet_wrap(~carb, ncol=4))
 grid.arrange(
