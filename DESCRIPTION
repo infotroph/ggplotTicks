@@ -1,7 +1,7 @@
 Package: ggplotTicks
 Type: Package
 Title: Put axis ticks on all sides of a ggplot
-Version: 0.0.1
+Version: 0.0.2
 Date: 2015-10-01
 Author: Chris Black
 Maintainer: Chris Black <chris@ckblack.org>

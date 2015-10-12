@@ -1,0 +1,3 @@
+0.0.2: Multipanel plots now supported. Function 'swapticks' is now exported and documented, but may or may not be any use outside of mirror.ticks.
+
+0.0.1: First version that compiles as an R package, with one function 'mirror.ticks'.
