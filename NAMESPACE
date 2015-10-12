@@ -1,2 +1,2 @@
-exportPattern("^[[:alpha:]]+")
+export(mirror.ticks, swaptick)
 import(ggplot2, grid, gtable)
