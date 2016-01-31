@@ -88,6 +88,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 		if(allPanels==TRUE || is_rowend[i]){
 			rtax = axes$grobs[[cur_axes[1]]]
+			rtax$name = paste0(rtax$name, "-right-", i)
 
 			rttxt = axgrep(rtax$children$axis, "text")
 			rtax$children$axis$grobs[[rttxt]]$label = NULL
@@ -104,6 +105,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 		if(allPanels==TRUE || is_coltop[i]){
 			topax = axes$grobs[[cur_axes[2]]]
+			topax$name = paste0(topax$name, "-top-", i)
 
 			toptxt = axgrep(topax$children$axis, "text")
 			topax$children$axis$grobs[[toptxt]]$label = NULL
@@ -126,11 +128,12 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 			r=cur_panel$r,
 			b=cur_panel$b,
 			z=cur_panel$z,
-			name=c("axis-r", "axis-t"))
+			name=paste0(c("axis-r-", "axis-t-"), i))
 
 		if(allPanels==TRUE){
 			if(!is_rowstart[i]){
 				lax = axes$grobs[[cur_axes[1]]]
+				lax$name = paste0(lax$name, "-left-", i)
 				ltxt = axgrep(lax$children$axis, "text")
 				lax$children$axis$grobs[[ltxt]]$label = NULL
 			}else{
@@ -140,6 +143,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 			if(!is_colbottom[i]){
 				botax = axes$grobs[[cur_axes[2]]]
+				botax$name = paste0(botax$name, "-bottom-", i)
 				bottxt = axgrep(botax$children$axis, "text")
 				botax$children$axis$grobs[[toptxt]]$label = NULL
 			}else{
@@ -155,7 +159,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 				r=cur_panel$r - c(1, 0),
 				b=cur_panel$b + c(0, 1),
 				z=cur_panel$z,
-				name=c("axis-ll", "axis-bb"))
+				name=paste0(c("axis-ll-", "axis-bb-"), i))
 		}
 	}
 	return(ggobj)
