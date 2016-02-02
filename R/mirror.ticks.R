@@ -30,6 +30,51 @@ match.axes = function(panel, extents){
 	}
 }
 
+# Takes a rendered ggplot2 axis grob and returns a copy
+# with labels removed and ticks reversed in direction xy,
+# ready to add to the other side of the original panel.
+#
+# Beware: Relies heavily on internal plot structure!
+# Known assumptions:
+#	1. `axGrob` is an absoluteGrob with exactly one child named `axis`.
+#		(Children with other names are OK and will be copied with no change)
+#	2. `axis` is a gtable containing:
+#		2a. Exactly one grob whose name contains "axis.text", which will be removed,
+#		2b. and exactly one grob whose name contains "axis.ticks", which will be mirrored.
+#		(Grobs with other names are OK and will be copied with no change)
+#	4. The tick grob has class `polyline` or equivalent:
+#		A list containing tick coordinates in components named `x` and `y`,
+#		both with class `unit.list`.
+#	5. The unit.list to be swapped has entries that alternate between
+#		5a. the starting point of the tick, with class `unit`,
+#		5b. and the ending point as a difference from start, with class `unit.arithmetic`.
+#		(This format is mandatory. swaptick() works directly on unit.arithmetic objects,
+#		so precomputed end coordinates will not work.)
+#
+# Will need to rewrite this if (when?) ggplot converts facets to ggproto objects.
+mirror_axis = function(axGrob, xy=NULL){
+	a = axGrob$children$axis
+
+	txt_idx = axgrep(a, "axis.text")
+	a$grobs[[txt_idx]] = zeroGrob()
+
+	if(!is.null(xy)){
+		tick_idx = axgrep(a, "axis.ticks")
+		tt = a$grobs[[tick_idx]][[xy]]
+		tt = swap_ticklist(tt)
+		a$grobs[[tick_idx]][[xy]] = tt
+	}
+
+	axGrob$children$axis = a
+	axGrob
+}
+
+# Takes a ggplot2 or gtable object, iterates through all panels mirroring axes.
+# If allPanels=FALSE, just put axes on both ends of each row/column.
+# If allPanels=TRUE, also add ticks to every edge of every panel --
+#	this probably only makes sense if you set a large between-panel space.
+#
+# Returns a gtable, NOT a ggplot object.
 mirror.ticks = function(ggobj, allPanels=FALSE){
 
 	if(!is.gtable(ggobj)){
@@ -87,34 +132,16 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 		cur_axes = match.axes(cur_panel, axis_extents)
 
 		if(allPanels==TRUE || is_rowend[i]){
-			rtax = axes$grobs[[cur_axes[1]]]
+			rtax = mirror_axis(axes$grobs[[cur_axes[1]]], xy="x")
 			rtax$name = paste0(rtax$name, "-right-", i)
-
-			rttxt = axgrep(rtax$children$axis, "text")
-			rtax$children$axis$grobs[[rttxt]]$label = NULL
-
-			rttick = axgrep(rtax$children$axis, "ticks")
-			rtax_x = rtax$children$axis$grobs[[rttick]]$x
-			rtax_x = sapply(rtax_x, swaptick, simplify=FALSE)
-			class(rtax_x) = c("unit.list", "unit")
-			rtax$children$axis$grobs[[rttick]]$x = rtax_x
 		}else{
 			rtax=grob(name=NULL)
 			class(rtax) = c("zeroGrob", class(rtax))
 		}
 
 		if(allPanels==TRUE || is_coltop[i]){
-			topax = axes$grobs[[cur_axes[2]]]
+			topax = mirror_axis(axes$grobs[[cur_axes[2]]], xy="y")
 			topax$name = paste0(topax$name, "-top-", i)
-
-			toptxt = axgrep(topax$children$axis, "text")
-			topax$children$axis$grobs[[toptxt]]$label = NULL
-
-			toptick = axgrep(topax$children$axis, "ticks")
-			topax_y = topax$children$axis$grobs[[toptick]]$y
-			topax_y = sapply(topax_y, swaptick, simplify=FALSE)
-			class(topax_y) = c("unit.list", "unit")
-			topax$children$axis$grobs[[toptick]]$y = topax_y
 		}else{
 			topax=grob(name=NULL)
 			class(topax) = c("zeroGrob", class(topax))
@@ -132,20 +159,16 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 
 		if(allPanels==TRUE){
 			if(!is_rowstart[i]){
-				lax = axes$grobs[[cur_axes[1]]]
+				lax = mirror_axis(axes$grobs[[cur_axes[1]]], xy=NULL)
 				lax$name = paste0(lax$name, "-left-", i)
-				ltxt = axgrep(lax$children$axis, "text")
-				lax$children$axis$grobs[[ltxt]]$label = NULL
 			}else{
 				lax=grob(name=NULL)
 				class(lax) = c("zeroGrob", class(lax))
 			}
 
 			if(!is_colbottom[i]){
-				botax = axes$grobs[[cur_axes[2]]]
+				botax = mirror_axis(axes$grobs[[cur_axes[2]]], xy=NULL)
 				botax$name = paste0(botax$name, "-bottom-", i)
-				bottxt = axgrep(botax$children$axis, "text")
-				botax$children$axis$grobs[[toptxt]]$label = NULL
 			}else{
 				botax=grob(name=NULL)
 				class(botax) = c("zeroGrob", class(botax))

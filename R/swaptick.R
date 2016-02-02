@@ -8,3 +8,9 @@ swaptick = function(tick){
 		return(tick)
 	}
 }
+
+swap_ticklist = function(ticks){
+	ticks = sapply(ticks, swaptick, simplify=FALSE)
+	class(ticks) = c("unit.list", "unit")
+	ticks
+}
