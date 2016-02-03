@@ -23,11 +23,11 @@
 mirror_axis = function(axGrob, xy=NULL){
 	a = axGrob$children$axis
 
-	txt_idx = axgrep(a, "axis.text")
+	txt_idx = grep_grobnames(a, "axis.text")
 	a$grobs[[txt_idx]] = zeroGrob()
 
 	if(!is.null(xy)){
-		tick_idx = axgrep(a, "axis.ticks")
+		tick_idx = grep_grobnames(a, "axis.ticks")
 		tt = a$grobs[[tick_idx]][[xy]]
 		tt = swap_ticklist(tt)
 		a$grobs[[tick_idx]][[xy]] = tt

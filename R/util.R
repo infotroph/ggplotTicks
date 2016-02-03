@@ -1,4 +1,4 @@
-axgrep = function(gtab, pattern){
+grep_grobnames = function(gtab, pattern){
 	# Helper, not exported: Find grobs with pattern in their grobnames.
 	# These are not necessarily the same grobs returned by
 	# gtable_filter(gtab, pattern)!
