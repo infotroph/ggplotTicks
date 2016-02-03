@@ -1,2 +1,5 @@
-export(mirror_ticks, swaptick)
-import(ggplot2, grid, gtable)
+export(mirror_ticks, mirror_gtable, mirror.ticks, swaptick, swap_ticklist)
+export(facet_render.ggTicks, facet_render.ggTicksAll)
+import(ggplot2)
+importFrom(grid, grob)
+importFrom(gtable, is.gtable, gtable_filter, gtable_add_grob)
