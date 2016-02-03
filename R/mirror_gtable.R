@@ -157,7 +157,7 @@ mirror_gtable = function(ggobj, allPanels=FALSE){
 }
 
 # Alias for old function name (last used in ggplotTicks <= 0.0.2.)
-mirror.ticks = function(...){
-	warn("`mirror.ticks` is deprecated. Please use `mirror_ticks` for ggplot output, or `mirror_gtable` if you still need a gtable grob.")
-	mirror_gtable(...)
+mirror.ticks = function(ggobj, allPanels=FALSE){
+	.Deprecated(new = "mirror_ticks", package="ggplotTicks")
+	mirror_gtable(ggobj, allPanels=allPanels)
 }
