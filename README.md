@@ -1,12 +1,12 @@
 ggplotTicks
 ============
 
-Provides a single<sup>*</sup> function `mirror.ticks` that puts scale ticks on all four sides on a ggplot by copying axes from bottom to top and left to right. Think of this as a replacement for the panel grid; it is not a way of adding multiple scales to the same plot.
+Provides a single<sup>*</sup> function `mirror_ticks` that puts scale ticks on all four sides on a ggplot by copying axes from bottom to top and left to right. Think of this as a replacement for the panel grid; it is not a way of adding multiple scales to the same plot.
 
 Note that mirroring converts the plot from a ggplot object to a gtable,
-so build the whole plot first and then call `mirror.ticks` as the last transformation before plotting.
+so build the whole plot first and then call `mirror_ticks` as the last transformation before plotting.
 
-<sup>*</sup>Plus a helper function or two, but these may or may not ever be useful outside of `mirror.ticks`.
+<sup>*</sup>Plus a helper function or two, but these may or may not ever be useful outside of `mirror_ticks`.
 
 ## Installation:
 
@@ -27,4 +27,4 @@ R CMD build ggplotTicks
 R CMD install ggplotTicks_<version.number.here>.tar.gz
 ```
 
-Once installed, load and use it like any other package: `library(ggplotTicks); myplot = ggplot(...); mirror.ticks(myplot)`
+Once installed, load and use it like any other package: `library(ggplotTicks); myplot = ggplot(...); mirror_ticks(myplot)`

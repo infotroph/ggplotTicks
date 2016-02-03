@@ -43,7 +43,7 @@ mirror_axis = function(axGrob, xy=NULL){
 #	this probably only makes sense if you set a large between-panel space.
 #
 # Returns a gtable, NOT a ggplot object.
-mirror.ticks = function(ggobj, allPanels=FALSE){
+mirror_gtable = function(ggobj, allPanels=FALSE){
 
 	if(!is.gtable(ggobj)){
 		ggobj = ggplotGrob(ggobj)
@@ -154,4 +154,10 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 		}
 	}
 	return(ggobj)
+}
+
+# Alias for old function name (last used in ggplotTicks <= 0.0.2.)
+mirror.ticks = function(...){
+	warn("`mirror.ticks` is deprecated. Please use `mirror_ticks` for ggplot output, or `mirror_gtable` if you still need a gtable grob.")
+	mirror_gtable(...)
 }

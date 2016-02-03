@@ -1,2 +1,2 @@
-export(mirror.ticks, swaptick)
+export(mirror_ticks, swaptick)
 import(ggplot2, grid, gtable)

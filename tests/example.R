@@ -4,7 +4,7 @@ library(ggplotTicks)
 testplot=(ggplot(mtcars, aes(wt, hp))
 	+geom_point())
 
-grid.arrange(testplot, mirror.ticks(testplot))
+grid.arrange(testplot, mirror_ticks(testplot))
 
 # The reason I did this in the first place:
 # My advisor prefers INWARD-facing ticks on all sides.
@@ -18,7 +18,7 @@ testplot.fancy=(ggplot(mtcars, aes(wt, hp, color=factor(cyl)))
 	+geom_point()
 	+lab_theme)
 
-grid.arrange(testplot.fancy, mirror.ticks(testplot.fancy))
+grid.arrange(testplot.fancy, mirror_ticks(testplot.fancy))
 
 
 # Multipanel plots:
@@ -28,8 +28,8 @@ tp_grid = (testplot.fancy
 	+ggtitle("facet_grid, fixed scales"))
 grid.arrange(
 	tp_grid,
-	mirror.ticks(tp_grid),
-	mirror.ticks(tp_grid, allPanels=TRUE))
+	mirror_ticks(tp_grid),
+	mirror_ticks(tp_grid, allPanels=TRUE))
 
 print("tp_grid_free")
 tp_grid_free = (testplot.fancy
@@ -37,8 +37,8 @@ tp_grid_free = (testplot.fancy
 	+ggtitle("facet_grid, free scales"))
 grid.arrange(
 	tp_grid_free,
-	mirror.ticks(tp_grid_free),
-	mirror.ticks(tp_grid_free, allPanels=TRUE))
+	mirror_ticks(tp_grid_free),
+	mirror_ticks(tp_grid_free, allPanels=TRUE))
 
 print("tp_wrap")
 tp_wrap = (testplot.fancy
@@ -46,8 +46,8 @@ tp_wrap = (testplot.fancy
 	+ggtitle("facet_wrap, fixed scales"))
 grid.arrange(
 	tp_wrap,
-	mirror.ticks(tp_wrap),
-	mirror.ticks(tp_wrap, allPanels=TRUE))
+	mirror_ticks(tp_wrap),
+	mirror_ticks(tp_wrap, allPanels=TRUE))
 
 print("tp_wrap_free")
 tp_wrap_free = (testplot.fancy
@@ -55,16 +55,16 @@ tp_wrap_free = (testplot.fancy
 	+ggtitle("facet_wrap, free scales"))
 grid.arrange(
 	tp_wrap_free,
-	mirror.ticks(tp_wrap_free),
-	mirror.ticks(tp_wrap_free, allPanels=TRUE))
+	mirror_ticks(tp_wrap_free),
+	mirror_ticks(tp_wrap_free, allPanels=TRUE))
 
 print("tp_wrap_ragged")
 tp_wrap_ragged = (testplot.fancy
 	+facet_wrap(~carb, ncol=4))
 grid.arrange(
 	tp_wrap_ragged,
-	mirror.ticks(tp_wrap_ragged),
-	mirror.ticks(tp_wrap_ragged, allPanels=TRUE))
+	mirror_ticks(tp_wrap_ragged),
+	mirror_ticks(tp_wrap_ragged, allPanels=TRUE))
 
 print("tp_wrap_freex")
 tp_wrap_freex = (testplot.fancy
@@ -72,8 +72,8 @@ tp_wrap_freex = (testplot.fancy
 	+ggtitle("facet_wrap, free x-scale"))
 grid.arrange(
 	tp_wrap_freex,
-	mirror.ticks(tp_wrap_freex),
-	mirror.ticks(tp_wrap_freex, allPanels=TRUE))
+	mirror_ticks(tp_wrap_freex),
+	mirror_ticks(tp_wrap_freex, allPanels=TRUE))
 
 print("tp_wrap_freey")
 tp_wrap_freey = (testplot.fancy
@@ -81,5 +81,5 @@ tp_wrap_freey = (testplot.fancy
 	+ggtitle("facet_wrap, free y-scale"))
 grid.arrange(
 	tp_wrap_freey,
-	mirror.ticks(tp_wrap_freey),
-	mirror.ticks(tp_wrap_freey, allPanels=TRUE))
+	mirror_ticks(tp_wrap_freey),
+	mirror_ticks(tp_wrap_freey, allPanels=TRUE))
