@@ -9,9 +9,9 @@ mirror_ticks = function(ggobj, allPanels=FALSE){
 
 # S3 methods to be picked up by the ggplot2::facet_render generic
 facet_render.ggTicks = function(...){
-	mirror_gtable(NextMethod(facet_render))
+	mirror_gtable(NextMethod("facet_render"))
 }
 
 facet_render.ggTicksAll = function(...){
-	mirror_gtable(NextMethod(facet_render), allPanels=TRUE)
+	mirror_gtable(NextMethod("facet_render"), allPanels=TRUE)
 }
