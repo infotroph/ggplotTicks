@@ -5,7 +5,7 @@ grep_grobnames = function(gtab, pattern){
 	which(sapply(gtab$grobs, function(x)grepl(pattern, x$name)))
 }
 
-match.axes = function(panel, extents){
+match_axes = function(panel, extents){
 	# Helper, not exported: Find the existing bottom and left axes
 	# that apply to this panel, even if they're in a different panel.
 

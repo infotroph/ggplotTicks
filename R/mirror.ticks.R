@@ -97,7 +97,7 @@ mirror.ticks = function(ggobj, allPanels=FALSE){
 		}
 
 		cur_panel = panel_extents[i,]
-		cur_axes = match.axes(cur_panel, axis_extents)
+		cur_axes = match_axes(cur_panel, axis_extents)
 
 		if(allPanels==TRUE || is_rowend[i]){
 			rtax = mirror_axis(axes$grobs[[cur_axes[1]]], xy="x")
