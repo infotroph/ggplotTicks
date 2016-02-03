@@ -12,7 +12,8 @@ lab_theme = theme_bw(10)+theme(
 	panel.grid.major = element_blank(),
 	panel.grid.minor = element_blank(),
 	axis.ticks.length = unit(-0.25 , "lines"),
-	axis.ticks.margin = unit(0.5 , "lines"))
+	axis.text.x = element_text(margin=margin(t=1, unit="lines")),
+	axis.text.y = element_text(margin=margin(r=1, unit="lines")))
 
 testplot.fancy=(ggplot(mtcars, aes(wt, hp, color=factor(cyl)))
 	+geom_point()
