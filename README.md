@@ -15,7 +15,7 @@ install_github("infotroph/ggplotTicks")
 ```
 Note that I *think* you can ignore the step of the `devtools` [installation instructions](https://cran.r-project.org/web/packages/devtools/README.html) where it claims you need a full development toolchain (on OS X this involves a multi-gigabyte download of Xcode). If you have any trouble installing on a machine with no developer tools, please let me know.
 
-The current version of ggplotTicks (0.1.0) does not work with versions of ggplot2 older than 2.0. If you are using ggplot2 1.x and can't upgrade it yet, you'll need to use ggplotTicks 0.0.2: `install_github("infotroph/ggplotTicks", ref="0.0.2")`. Make sure to read the documentation that matches your version.
+The current version of ggplotTicks (0.1.0) does not work with versions of ggplot2 older than 2.0. If you are using ggplot2 1.x and can't upgrade it yet, you'll need to use ggplotTicks 0.0.2: `install_github("infotroph/ggplotTicks", ref="v0.0.2")`. Make sure to read the documentation that matches your version.
 
 ### From a command line
 
