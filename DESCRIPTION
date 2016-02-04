@@ -1,6 +1,6 @@
 Package: ggplotTicks
 Type: Package
-Title: Put Axis Ticks on all Sides of a ggplot2 Plot
+Title: Put Axis Ticks on All Sides of a ggplot2 Plot
 Version: 0.1.0
 Date: 2016-02-02
 Author: Chris Black

@@ -1,3 +1,8 @@
+0.1.0:
+	* Supported version of ggplot2 jumps from 1.1 to 2.0 with no back-compatibility. Sorry!
+	* New function 'mirror_ticks' with same arguments as 'mirror.ticks', but returns an editable ggplot object instead of a gtable.
+	* Previous workhorse function mirror.ticks is deprecated. 'mirror_gtable' is a direct replacement, but consider using 'mirror_ticks' instead -- it returns a ggplot like you probably wanted in the first place.
+
 0.0.2: Multipanel plots now supported. Function 'swapticks' is now exported and documented, but may or may not be any use outside of mirror.ticks.
 
 0.0.1: First version that compiles as an R package, with one function 'mirror.ticks'.
